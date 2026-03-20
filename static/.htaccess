@@ -1,0 +1,9 @@
+# Serve existing files and directories directly (assets, /api/contact.php, etc.)
+# Everything else falls back to index.html so SvelteKit handles routing client-side.
+
+RewriteEngine On
+RewriteBase /
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ /index.html [L]
