@@ -23,7 +23,7 @@
 					name: String(formData.get('name') ?? '').trim(),
 					email: String(formData.get('email') ?? '').trim(),
 					message: String(formData.get('message') ?? '').trim(),
-					company: String(formData.get('company') ?? '')
+					_gotcha: String(formData.get('_gotcha') ?? '')
 				})
 			});
 
@@ -99,7 +99,7 @@
 						novalidate
 					>
 						<!-- Honeypot: hidden from real users, catches bots that fill every field -->
-						<input type="text" name="company" tabindex="-1" autocomplete="off" class="visually-hidden" />
+						<input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="visually-hidden" />
 
 						<div class="field">
 							<label for="name">{tr.contact.labelName}</label>
