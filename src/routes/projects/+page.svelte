@@ -1,36 +1,45 @@
 <script lang="ts">
 	import { projects } from '$lib/data/projects';
 	import ProjectCard from '$lib/components/ui/ProjectCard.svelte';
+	import { t } from '$lib/i18n';
 
-	// Build unique tag list from all projects
-	const allTags = ['All', ...new Set(projects.flatMap((p) => p.tags))];
-	let activeTag = 'All';
+	const uniqueTags = [...new Set(projects.flatMap((p) => p.tags))];
+	let activeTag = $state<string | null>(null);
 
-	$: filtered = activeTag === 'All' ? projects : projects.filter((p) => p.tags.includes(activeTag));
+	const filtered = $derived(
+		activeTag === null ? projects : projects.filter((p) => p.tags.includes(activeTag!))
+	);
+	const tr = $derived(t());
 </script>
 
 <svelte:head>
-	<title>Projects — Pixel Perfect Designs</title>
-	<meta name="description" content="Frontend development and design projects by Nikolas." />
+	<title>{tr.meta.projects.title}</title>
+	<meta name="description" content={tr.meta.projects.description} />
 </svelte:head>
 
 <div class="page">
 	<div class="container">
 		<header class="page-header">
-			<p class="eyebrow">Work</p>
-			<h1 class="page-title">All projects</h1>
-			<p class="page-sub">
-				A selection of professional work across SaaS platforms, e-commerce, and marketing sites.
-			</p>
+			<p class="eyebrow">{tr.projects.eyebrow}</p>
+			<h1 class="page-title">{tr.projects.headline}</h1>
+			<p class="page-sub">{tr.projects.intro}</p>
 		</header>
 
 		<!-- Filter bar -->
-		<div class="filter-bar" role="group" aria-label="Filter projects by technology">
-			{#each allTags as tag (tag)}
+		<div class="filter-bar" role="group" aria-label={tr.projects.filterAriaLabel}>
+			<button
+				class="filter-btn"
+				class:filter-btn--active={activeTag === null}
+				onclick={() => (activeTag = null)}
+				aria-pressed={activeTag === null}
+			>
+				{tr.projects.filterAll}
+			</button>
+			{#each uniqueTags as tag (tag)}
 				<button
 					class="filter-btn"
 					class:filter-btn--active={activeTag === tag}
-					on:click={() => (activeTag = tag)}
+					onclick={() => (activeTag = tag)}
 					aria-pressed={activeTag === tag}
 				>
 					{tag}

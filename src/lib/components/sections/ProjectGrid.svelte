@@ -1,17 +1,20 @@
 <script lang="ts">
 	import { featuredProjects } from '$lib/data/projects';
 	import ProjectCard from '$lib/components/ui/ProjectCard.svelte';
+	import { t } from '$lib/i18n';
+
+	const tr = $derived(t());
 </script>
 
 <section class="projects-teaser">
 	<div class="container">
 		<div class="section-header">
 			<div class="section-header__left">
-				<p class="eyebrow">Selected work</p>
-				<h2 class="section-title">Projects that matter</h2>
+				<p class="eyebrow">{tr.projectGrid.eyebrow}</p>
+				<h2 class="section-title">{tr.projectGrid.title}</h2>
 			</div>
 			<a href="/projects" class="section-link">
-				View all projects
+				{tr.projectGrid.viewAll}
 				<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
 					<path
 						d="M3 8h10M9 4l4 4-4 4"

@@ -1,5 +1,8 @@
 <script lang="ts">
+	import { t } from '$lib/i18n';
+
 	const year = new Date().getFullYear();
+	const tr = $derived(t());
 
 	const socials = [
 		{ name: 'LinkedIn', url: 'https://linkedin.com/in/nikolas-kotsikos' },
@@ -9,11 +12,11 @@
 
 <footer>
 	<div class="container footer-inner">
-		<a href="/" class="footer-logo" aria-label="Pixel Perfect Designs — home">
+		<a href="/" class="footer-logo" aria-label={tr.footer.logoAriaLabel}>
 			<span class="logo-mark">
 				<img
 					src="/images/transparent-logo-yellow.png"
-					alt="PixelPerfect Designs logo"
+					alt={tr.footer.logoAlt}
 					loading="eager"
 				/>
 			</span>
@@ -21,17 +24,17 @@
 		</a>
 
 		<p class="footer-copy">
-			© {year} Pixel Perfect Designs
+			{tr.footer.copyright.replace('{year}', String(year))}
 		</p>
 
-		<nav class="footer-socials" aria-label="Social links">
+		<nav class="footer-socials" aria-label={tr.footer.socialsAriaLabel}>
 			{#each socials as social (social.name)}
 				<a
 					href={social.url}
 					target="_blank"
 					rel="noopener noreferrer"
 					class="social-link"
-					aria-label="{social.name} — opens in new tab"
+					aria-label={tr.footer.socialAriaLabel.replace('{name}', social.name)}
 				>
 					{#if social.name === 'LinkedIn'}
 						<svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">

@@ -1,83 +1,26 @@
 <script lang="ts">
-	const services = [
-		{
-			number: '01',
-			title: 'Software Development',
-			description:
-				'End-to-end web application development built on modern frameworks and TypeScript. From architecture decisions to production deployment — clean, maintainable code that scales.',
-			deliverables: [
-				'SvelteKit & React applications',
-				'TypeScript & strict type safety',
-				'REST & API integration',
-				'Performance optimisation',
-				'Code review & refactoring'
-			]
-		},
-		{
-			number: '02',
-			title: 'UX/UI Design',
-			description:
-				'User-centred design that bridges research and implementation. Informed by an architectural background in spatial reasoning and hierarchy — interfaces that feel as good as they look.',
-			deliverables: [
-				'Wireframing & prototyping',
-				'Figma design & component libraries',
-				'Usability testing',
-				'Interaction design',
-				'Design handoff & documentation'
-			]
-		},
-		{
-			number: '03',
-			title: 'Frontend Design',
-			description:
-				'Pixel-precise implementation of designs into living, breathing interfaces. The gap between a Figma file and a finished product — closed completely, with attention to motion, accessibility, and responsiveness.',
-			deliverables: [
-				'Responsive, mobile-first layouts',
-				'CSS design systems & tokens',
-				'Animation & micro-interactions',
-				'Accessibility (WCAG 2.1)',
-				'Cross-browser compatibility'
-			]
-		},
-		{
-			number: '04',
-			title: 'Graphic Design & Visual Communications',
-			description:
-				"Visual identity and communication design with a developer's eye for consistency. Assets that work across digital and print, built around a coherent brand language.",
-			deliverables: [
-				'Brand identity & logo design',
-				'Marketing & print materials',
-				'Social media assets',
-				'Presentation design',
-				'Adobe Creative Suite'
-			]
-		}
-	];
+	import { t } from '$lib/i18n';
+
+	const tr = $derived(t());
 </script>
 
 <svelte:head>
-	<title>Services — Pixel Perfect Designs</title>
-	<meta
-		name="description"
-		content="Frontend development, UX/UI design, and visual communications services from Nikolas Kotsikos — based in Rotterdam."
-	/>
+	<title>{tr.meta.services.title}</title>
+	<meta name="description" content={tr.meta.services.description} />
 </svelte:head>
 
 <div class="page">
 	<div class="container">
 		<!-- ── Header ─────────────────────────────── -->
 		<header class="page-header">
-			<p class="eyebrow">What I offer</p>
-			<h1 class="page-title">Services</h1>
-			<p class="page-sub">
-				A focused set of disciplines — each one informed by the others. Design informs the code.
-				Architecture informs the design. The result is work that holds together end to end.
-			</p>
+			<p class="eyebrow">{tr.services.eyebrow}</p>
+			<h1 class="page-title">{tr.services.headline}</h1>
+			<p class="page-sub">{tr.services.intro}</p>
 		</header>
 
 		<!-- ── Services grid ──────────────────────── -->
 		<div class="services-grid">
-			{#each services as service (service.number)}
+			{#each tr.services.items as service (service.number)}
 				<article class="service-card">
 					<span class="service-number" aria-hidden="true">{service.number}</span>
 					<div class="service-body">
@@ -96,14 +39,11 @@
 		<!-- ── CTA ────────────────────────────────── -->
 		<section class="cta-block">
 			<div class="cta-copy">
-				<h2 class="cta-title">Have a project in mind?</h2>
-				<p class="cta-sub">
-					Whether you need a full build, a design refresh, or just a second opinion — I'd love to
-					hear about it.
-				</p>
+				<h2 class="cta-title">{tr.services.ctaTitle}</h2>
+				<p class="cta-sub">{tr.services.ctaSub}</p>
 			</div>
 			<a href="/contact" class="cta-btn">
-				Get in touch
+				{tr.services.ctaBtn}
 				<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
 					<path
 						d="M3 8h10M9 4l4 4-4 4"

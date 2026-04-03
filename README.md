@@ -52,6 +52,27 @@ The site will be available at `http://localhost:5173`.
 
 ---
 
+## Internationalisation (EN / NL)
+
+The site supports English and Dutch. Language switching is handled entirely client-side — no server involvement, compatible with `adapter-static`.
+
+### How it works
+
+- **Store** — `src/lib/i18n/store.svelte.ts` holds the active locale as a `$state` rune. `initLocale()` reads from `localStorage` on mount; `setLocale()` persists the choice back. The `t()` function returns the full translation object for the current locale.
+- **Locale files** — `src/lib/i18n/locales/en.ts` and `nl.ts` each export a typed `Translations` object covering every string in the UI — nav labels, page copy, form labels, meta tags, and all data arrays (experience, skills, education, services).
+- **Types** — `src/lib/i18n/types.ts` defines the `Translations` type. TypeScript enforces that both locale files are structurally identical.
+- **Toggle** — `Header.svelte` renders an `EN / NL` toggle button in both the desktop header and the mobile drawer. Clicking it calls `toggleLocale()`.
+- **Reactivity** — Every component that needs translated strings declares `const tr = $derived(t())`. When the locale changes, all derived values update automatically and the whole UI re-renders with no page navigation.
+- **`<html lang>`** — `+layout.svelte` sets `document.documentElement.lang` via a `$effect`, keeping the attribute in sync with the active locale for screen readers and SEO crawlers.
+
+### Adding or updating translations
+
+All translatable content lives in `src/lib/i18n/locales/`. To update a string, edit it in both `en.ts` and `nl.ts`. TypeScript will flag any key that exists in one file but not the other.
+
+Project-specific copy (title, description, role) is keyed by `project.id` under the `projectsData` key in each locale file. `ProjectCard.svelte` looks up its translations there and falls back to the values in `projects.ts` if no entry is found.
+
+---
+
 ## Project Structure
 
 ```
@@ -62,7 +83,7 @@ pixelperfect-designs/
 │   ├── lib/
 │   │   ├── components/
 │   │   │   ├── layout/
-│   │   │   │   ├── Header.svelte       # Fixed nav header with mobile drawer
+│   │   │   │   ├── Header.svelte       # Fixed nav header, mobile drawer, EN/NL toggle
 │   │   │   │   ├── Nav.svelte          # Desktop navigation links
 │   │   │   │   └── Footer.svelte       # Footer with social links
 │   │   │   ├── sections/
@@ -70,10 +91,17 @@ pixelperfect-designs/
 │   │   │   │   └── ProjectGrid.svelte  # Featured projects grid (home page)
 │   │   │   └── ui/
 │   │   │       └── ProjectCard.svelte  # Reusable project card
-│   │   └── data/
-│   │       └── projects.ts             # Project data + TypeScript types
+│   │   ├── data/
+│   │   │   └── projects.ts             # Project data + TypeScript types
+│   │   └── i18n/
+│   │       ├── index.ts                # Public re-exports
+│   │       ├── types.ts                # Translations type + supporting types
+│   │       ├── store.svelte.ts         # $state locale store (t, setLocale, toggleLocale…)
+│   │       └── locales/
+│   │           ├── en.ts               # English translations
+│   │           └── nl.ts               # Dutch translations
 │   └── routes/
-│       ├── +layout.svelte              # Root layout (Header + Footer)
+│       ├── +layout.svelte              # Root layout (Header + Footer, locale init)
 │       ├── +page.svelte                # Home
 │       ├── about/+page.svelte          # About / CV
 │       ├── contact/+page.svelte        # Contact form

@@ -1,92 +1,12 @@
 <script lang="ts">
-	// Work experience driven by data so it's easy to update
-	const experience = [
-		{
-			period: 'Aug 2024 – Aug 2025',
-			role: 'Front-end Developer',
-			company: 'Meta-Skills',
-			location: 'Utrecht, NL',
-			type: 'Full-time · Contract',
-			highlights: [
-				'Designed and built responsive frontend components for the public marketing site.',
-				"Led UX/UI design and prototyping in Figma for the company's proprietary web application.",
-				'Developed type-safe Svelte/SvelteKit components in TypeScript, reducing bug reports through strict typing standards.',
-				'Implemented visual regression testing with svelte-csf in Storybook, ensuring component consistency across releases.'
-			]
-		},
-		{
-			period: 'Feb 2022 – Dec 2023',
-			role: 'Front-end Developer',
-			company: 'SIDES Benelux',
-			location: 'Bosschenhoofd, NL',
-			type: 'Full-time · Permanent',
-			highlights: [
-				'Delivered 15+ webshop frontends for restaurant clients, consistently meeting 2-week sprint cycles.',
-				'Reduced mobile checkout abandonment by 25% through responsive design improvements.',
-				'Front-end development of webshops, mobile apps and self-order terminals in HTML/PHTML, SASS & jQuery.',
-				'Deployment, code review and merging.'
-			]
-		},
-		{
-			period: 'Sep 2021 – Feb 2022',
-			role: 'Front-end Developer',
-			company: 'Online Drumles',
-			location: 'The Hague, NL',
-			type: 'Full-time · Internship',
-			highlights: [
-				'Optimized platform load time by 35% through CSS refactoring and JavaScript optimization.',
-				'Front-end development of the Onlinedrumles educational platform.',
-				'Custom widget creation in PHP and WordPress plugin maintenance.'
-			]
-		},
-		{
-			period: '2006 – 2018',
-			role: 'Architect & Co-owner',
-			company: 'K+K Architects',
-			location: 'Athens, Greece',
-			type: 'Full-time · Freelance',
-			highlights: [
-				'Managed and delivered 20+ architectural projects from concept to completion.',
-				'Developed strong project management and client communication skills now applied directly to development work.'
-			]
-		}
-	];
+	import { t } from '$lib/i18n';
 
-	const skills = {
-		Expert: ['HTML5', 'CSS3 / SCSS', 'JavaScript', 'TypeScript', 'Svelte / SvelteKit', 'Git'],
-		Advanced: ['React', 'Figma', 'Storybook', 'jQuery', 'PHP'],
-		'Working Knowledge': ['Python', 'WordPress', 'Jenkins'],
-		Tools: ['VS Code', 'Jira', 'ClickUp', 'Adobe CS']
-	};
-
-	const education = [
-		{
-			period: '2020 – 2021',
-			degree: 'Full Stack Web Developer Diploma',
-			institution: 'Code Institute',
-			location: 'Dublin, Ireland'
-		},
-		{
-			period: '2002 – 2004',
-			degree: 'M.Sc. Architecture — Ecological & Sustainable Design',
-			institution: 'South Bank University',
-			location: 'London, England'
-		},
-		{
-			period: '1997 – 2002',
-			degree: 'B.A. & P.G. Dip. in Architecture',
-			institution: 'South Bank University',
-			location: 'London, England'
-		}
-	];
+	const tr = $derived(t());
 </script>
 
 <svelte:head>
-	<title>About — Pixel Perfect Designs</title>
-	<meta
-		name="description"
-		content="Frontend developer based in Rotterdam. Former architect turned developer with 3+ years building responsive web applications."
-	/>
+	<title>{tr.meta.about.title}</title>
+	<meta name="description" content={tr.meta.about.description} />
 </svelte:head>
 
 <div class="page">
@@ -94,25 +14,12 @@
 		<!-- ── Intro ───────────────────────────────── -->
 		<section class="intro">
 			<div class="intro-copy">
-				<p class="eyebrow">About me</p>
-				<h1 class="page-title">Architect turned<br />frontend developer</h1>
+				<p class="eyebrow">{tr.about.eyebrow}</p>
+				<h1 class="page-title">{tr.about.headline}<br />{tr.about.headlineLine2}</h1>
 				<div class="intro-body">
-					<p>
-						I'm Nikolas — a frontend developer based in Rotterdam with a background that most people
-						don't expect. Before writing a single line of production code, I spent 14 years as a
-						practising architect in Athens, managing projects from concept through to construction.
-					</p>
-					<p>
-						That background didn't disappear when I switched careers — it sharpened how I approach
-						frontend work. The same thinking that goes into a building's spatial hierarchy, material
-						consistency, and structural integrity maps directly onto component architecture, design
-						systems, and performant, maintainable code.
-					</p>
-					<p>
-						I've been living in Rotterdam for around 7 years now, and I work primarily in
-						TypeScript, Svelte/SvelteKit, and React — building interfaces that are as considered
-						under the hood as they look on screen.
-					</p>
+					{#each tr.about.bio as para (para)}
+						<p>{para}</p>
+					{/each}
 				</div>
 			</div>
 
@@ -120,13 +27,13 @@
 				<div class="photo-frame">
 					<img
 						src="/images/nikolas.jpg"
-						alt="Nikolas Kotsikos — frontend developer"
+						alt={tr.about.photoAlt}
 						loading="eager"
 					/>
 				</div>
 				<div class="photo-tag">
 					<span class="photo-tag__dot"></span>
-					Rotterdam, NL
+					{tr.about.location}
 				</div>
 			</div>
 		</section>
@@ -136,15 +43,15 @@
 		<!-- ── Skills ─────────────────────────────── -->
 		<section class="section">
 			<div class="section-label">
-				<p class="eyebrow">Skills</p>
+				<p class="eyebrow">{tr.about.skillsEyebrow}</p>
 			</div>
 			<div class="section-content">
 				<div class="skills-grid">
-					{#each Object.entries(skills) as [level, items] (level)}
+					{#each tr.about.skills as group (group.label)}
 						<div class="skill-group">
-							<p class="skill-level">{level}</p>
+							<p class="skill-level">{group.label}</p>
 							<ul class="skill-list">
-								{#each items as skill (skill)}
+								{#each group.items as skill (skill)}
 									<li class="skill-tag">{skill}</li>
 								{/each}
 							</ul>
@@ -159,12 +66,12 @@
 		<!-- ── Experience ─────────────────────────── -->
 		<section class="section">
 			<div class="section-label">
-				<p class="eyebrow">Experience</p>
+				<p class="eyebrow">{tr.about.experienceEyebrow}</p>
 			</div>
 			<div class="section-content">
 				<ol class="timeline">
-					{#each experience as job, i (job.company)}
-						<li class="timeline-item" class:timeline-item--arch={i === experience.length - 1}>
+					{#each tr.about.experience as job, i (job.company)}
+						<li class="timeline-item" class:timeline-item--arch={i === tr.about.experience.length - 1}>
 							<div class="timeline-marker" aria-hidden="true"></div>
 							<div class="timeline-body">
 								<div class="timeline-header">
@@ -197,11 +104,11 @@
 		<!-- ── Education ──────────────────────────── -->
 		<section class="section">
 			<div class="section-label">
-				<p class="eyebrow">Education</p>
+				<p class="eyebrow">{tr.about.educationEyebrow}</p>
 			</div>
 			<div class="section-content">
 				<ol class="edu-list">
-					{#each education as item (item.degree)}
+					{#each tr.about.education as item (item.degree)}
 						<li class="edu-item">
 							<span class="edu-period">{item.period}</span>
 							<div>
@@ -219,21 +126,12 @@
 		<!-- ── Personal ───────────────────────────── -->
 		<section class="section section--personal">
 			<div class="section-label">
-				<p class="eyebrow">Outside of work</p>
+				<p class="eyebrow">{tr.about.personalEyebrow}</p>
 			</div>
 			<div class="section-content">
-				<p class="personal-text">
-					I really enjoy listening to good music, and playing some of it on my guitar. 
-					Computing is also a hobby for me as I enjoy building PCs, watching coding & tech videos, 
-					and gaming quite a lot. I become a voracious reader	during the summer months and I am 
-					always interested in watching a good film on the big screen.
-				</p>
-				<p class="personal-text">
-					I also like cooking, and I am known amongst friends for my bolognese and pizza nights.
-					Last but not least, being a bit of a geek I also like to do some hobby moddeling and 
-					miniature painting from time to time, something that ties neatly with my love for board 
-					games.
-				</p>			
+				{#each tr.about.personal as para (para)}
+					<p class="personal-text">{para}</p>
+				{/each}
 			</div>
 		</section>
 	</div>

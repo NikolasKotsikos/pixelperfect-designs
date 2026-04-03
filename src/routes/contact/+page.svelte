@@ -1,7 +1,11 @@
 <script lang="ts">
-	let submitting = false;
-	let success = false;
-	let error = '';
+	import { t } from '$lib/i18n';
+
+	const tr = $derived(t());
+
+	let submitting = $state(false);
+	let success = $state(false);
+	let error = $state('');
 
 	async function handleSubmit(e: SubmitEvent) {
 		const form = e.currentTarget as HTMLFormElement;
@@ -26,14 +30,14 @@
 			const out = await res.json().catch(() => ({}));
 
 			if (!res.ok || !out.ok) {
-				error = out.error ?? 'Could not send your message. Please try again.';
+				error = out.error ?? tr.contact.errorGeneric;
 				return;
 			}
 
 			success = true;
 			form.reset();
 		} catch {
-			error = 'Could not send your message. Please check your connection and try again.';
+			error = tr.contact.errorNetwork;
 		} finally {
 			submitting = false;
 		}
@@ -41,22 +45,16 @@
 </script>
 
 <svelte:head>
-	<title>Contact — PixelPerfect Designs</title>
-	<meta
-		name="description"
-		content="Get in touch with Nikolas — frontend developer based in Rotterdam. Available for freelance projects and full-time roles."
-	/>
+	<title>{tr.meta.contact.title}</title>
+	<meta name="description" content={tr.meta.contact.description} />
 </svelte:head>
 
 <div class="page">
 	<div class="container">
 		<header class="page-header">
-			<p class="eyebrow">Get in touch</p>
-			<h1 class="page-title">Let's work together</h1>
-			<p class="page-sub">
-				Have a project in mind, or just want to say hello? Drop me a message and I'll get back to
-				you within one business day.
-			</p>
+			<p class="eyebrow">{tr.contact.eyebrow}</p>
+			<h1 class="page-title">{tr.contact.headline}</h1>
+			<p class="page-sub">{tr.contact.intro}</p>
 		</header>
 
 		<div class="contact-grid">
@@ -74,8 +72,8 @@
 							/>
 						</svg>
 						<div>
-							<p class="success-title">Message sent</p>
-							<p class="success-sub">Thanks, I'll be in touch shortly.</p>
+							<p class="success-title">{tr.contact.successTitle}</p>
+							<p class="success-sub">{tr.contact.successSub}</p>
 						</div>
 					</div>
 				{:else}
@@ -97,19 +95,19 @@
 					<form
 						method="POST"
 						action="/api/contact.php"
-						on:submit|preventDefault={handleSubmit}
+						onsubmit={(e) => { e.preventDefault(); handleSubmit(e); }}
 						novalidate
 					>
 						<!-- Honeypot: hidden from real users, catches bots that fill every field -->
 						<input type="text" name="company" tabindex="-1" autocomplete="off" class="visually-hidden" />
 
 						<div class="field">
-							<label for="name">Name</label>
+							<label for="name">{tr.contact.labelName}</label>
 							<input
 								id="name"
 								name="name"
 								type="text"
-								placeholder="Your name"
+								placeholder={tr.contact.placeholderName}
 								required
 								autocomplete="name"
 								disabled={submitting}
@@ -117,12 +115,12 @@
 						</div>
 
 						<div class="field">
-							<label for="email">Email</label>
+							<label for="email">{tr.contact.labelEmail}</label>
 							<input
 								id="email"
 								name="email"
 								type="email"
-								placeholder="your@email.com"
+								placeholder={tr.contact.placeholderEmail}
 								required
 								autocomplete="email"
 								disabled={submitting}
@@ -130,11 +128,11 @@
 						</div>
 
 						<div class="field">
-							<label for="message">Message</label>
+							<label for="message">{tr.contact.labelMessage}</label>
 							<textarea
 								id="message"
 								name="message"
-								placeholder="Tell me about your project…"
+								placeholder={tr.contact.placeholderMessage}
 								rows="6"
 								required
 								disabled={submitting}
@@ -144,9 +142,9 @@
 						<button type="submit" class="submit-btn" disabled={submitting} aria-busy={submitting}>
 							{#if submitting}
 								<span class="spinner" aria-hidden="true"></span>
-								Sending…
+								{tr.contact.submitting}
 							{:else}
-								Send message
+								{tr.contact.submit}
 								<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
 									<path
 										d="M3 8h10M9 4l4 4-4 4"
@@ -165,24 +163,24 @@
 			<!-- ── Details ───────────────────────────── -->
 			<aside class="details">
 				<div class="detail-group">
-					<p class="detail-label">Email</p>
+					<p class="detail-label">{tr.contact.detailEmail}</p>
 					<a href="mailto:info@pixelperfectdesigns.nl" class="detail-value">
 						info@pixelperfectdesigns.nl
 					</a>
 				</div>
 
 				<div class="detail-group">
-					<p class="detail-label">Based in</p>
-					<p class="detail-value">Rotterdam, Netherlands</p>
+					<p class="detail-label">{tr.contact.detailBasedIn}</p>
+					<p class="detail-value">{tr.contact.detailBasedInValue}</p>
 				</div>
 
 				<div class="detail-group">
-					<p class="detail-label">Availability</p>
-					<p class="detail-value">Open to freelance &amp; full-time</p>
+					<p class="detail-label">{tr.contact.detailAvailability}</p>
+					<p class="detail-value">{tr.contact.detailAvailabilityValue}</p>
 				</div>
 
 				<div class="detail-group">
-					<p class="detail-label">Links</p>
+					<p class="detail-label">{tr.contact.detailLinks}</p>
 					<div class="links">
 						<a
 							href="https://linkedin.com/in/nikolaskotsikos"
@@ -193,7 +191,7 @@
 							LinkedIn
 						</a>
 						<a
-							href="https://github.com/nkotsikos"
+							href="https://github.com/NikolasKotsikos"
 							class="detail-link"
 							rel="external noopener noreferrer"
 							target="_blank"

@@ -3,9 +3,13 @@
 	import { afterNavigate } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import Nav from './Nav.svelte';
+	import { t, getLocale, toggleLocale } from '$lib/i18n';
 
 	let scrolled = $state(false);
 	let menuOpen = $state(false);
+
+	const tr = $derived(t());
+	const locale = $derived(getLocale());
 
 	onMount(() => {
 		const handleScroll = () => {
@@ -23,25 +27,36 @@
 
 <header class:scrolled>
 	<div class="container header-inner">
-		<a href="/" class="logo" aria-label="PixelPerfect Designs — home">
+		<a href="/" class="logo" aria-label={tr.header.logoAriaLabel}>
 			<span class="logo-mark">
 				<img
 					src="/images/transparent-logo-yellow.png"
-					alt="PixelPerfect Designs logo"
+					alt={tr.header.logoAlt}
 					loading="eager"
 				/>
 			</span>
 			<span class="logo-text">PixelPerfect<br />Designs</span>
 		</a>
 
-		<!-- Desktop nav -->
-		<Nav />
+		<!-- Desktop nav + lang toggle -->
+		<div class="header-right">
+			<Nav />
+			<button
+				class="lang-toggle"
+				onclick={toggleLocale}
+				aria-label={locale === 'en' ? tr.header.switchToDutch : tr.header.switchToEnglish}
+			>
+				<span class:active={locale === 'en'}>EN</span>
+				<span class="lang-divider">/</span>
+				<span class:active={locale === 'nl'}>NL</span>
+			</button>
+		</div>
 
 		<!-- Mobile hamburger -->
 		<button
 			class="hamburger"
 			class:open={menuOpen}
-			aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+			aria-label={menuOpen ? tr.header.closeMenu : tr.header.openMenu}
 			aria-expanded={menuOpen}
 			aria-controls="mobile-drawer"
 			onclick={() => (menuOpen = !menuOpen)}
@@ -55,13 +70,24 @@
 
 <!-- Mobile drawer -->
 <div id="mobile-drawer" class="drawer" class:drawer--open={menuOpen} aria-hidden={!menuOpen}>
-	<nav class="drawer-nav" aria-label="Mobile navigation">
-		<a href="/" class:active={page.url.pathname === '/'}>Home</a>
-		<a href="/about" class:active={page.url.pathname === '/about'}>About</a>
-		<a href="/projects" class:active={page.url.pathname.startsWith('/projects')}>Projects</a>
-		<a href="/services" class:active={page.url.pathname === '/services'}>Services</a>
-		<a href="/contact" class:active={page.url.pathname === '/contact'}>Contact</a>
+	<nav class="drawer-nav" aria-label={tr.nav.mobileAriaLabel}>
+		<a href="/" class:active={page.url.pathname === '/'}>{tr.nav.home}</a>
+		<a href="/about" class:active={page.url.pathname === '/about'}>{tr.nav.about}</a>
+		<a href="/projects" class:active={page.url.pathname.startsWith('/projects')}>{tr.nav.projects}</a>
+		<a href="/services" class:active={page.url.pathname === '/services'}>{tr.nav.services}</a>
+		<a href="/contact" class:active={page.url.pathname === '/contact'}>{tr.nav.contact}</a>
 	</nav>
+
+	<!-- Lang toggle (mobile drawer) -->
+	<button
+		class="lang-toggle lang-toggle--drawer"
+		onclick={toggleLocale}
+		aria-label={locale === 'en' ? tr.header.switchToDutch : tr.header.switchToEnglish}
+	>
+		<span class:active={locale === 'en'}>EN</span>
+		<span class="lang-divider">/</span>
+		<span class:active={locale === 'nl'}>NL</span>
+	</button>
 </div>
 
 <!-- Backdrop -->
@@ -241,10 +267,55 @@
 		}
 	}
 
+	/* Desktop right group */
+	.header-right {
+		display: flex;
+		align-items: center;
+		gap: var(--space-xl);
+	}
+
+	/* Lang toggle */
+	.lang-toggle {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		background: none;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		padding: 6px 10px;
+		cursor: pointer;
+		font-size: var(--text-xs);
+		font-weight: 600;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--color-text-muted);
+		transition: border-color var(--transition-fast);
+	}
+
+	.lang-toggle:hover {
+		border-color: var(--color-accent);
+	}
+
+	.lang-toggle span.active {
+		color: var(--color-accent);
+	}
+
+	.lang-divider {
+		color: var(--color-border);
+	}
+
+	.lang-toggle--drawer {
+		margin-top: var(--space-xl);
+	}
+
 	/* Responsive */
 	@media (max-width: 768px) {
 		.hamburger {
 			display: flex;
+		}
+
+		.header-right {
+			display: none;
 		}
 	}
 </style>

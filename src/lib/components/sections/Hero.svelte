@@ -1,34 +1,34 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
+	import { t } from '$lib/i18n';
 
-	let mounted = false;
+	let mounted = $state(false);
 	onMount(() => {
 		// Small delay lets the browser paint first, giving CSS transitions
 		// something to animate from
 		requestAnimationFrame(() => (mounted = true));
 	});
+
+	const tr = $derived(t());
 </script>
 
 <section class="hero" class:mounted>
 	<div class="container hero-inner">
 		<!-- Left: copy -->
 		<div class="hero-copy">
-			<p class="hero-eyebrow">Frontend Development & Design</p>
+			<p class="hero-eyebrow">{tr.hero.eyebrow}</p>
 
 			<h1 class="hero-headline">
-				Pixel perfect websites for
-				<span class="hero-headline--accent">ambitious brands</span>
+				{tr.hero.headline}
+				<span class="hero-headline--accent">{tr.hero.headlineAccent}</span>
 			</h1>
 
-			<p class="hero-sub">
-				Based in Rotterdam. I design and build fast, beautiful, conversion-focused websites — from
-				concept to production-ready code.
-			</p>
+			<p class="hero-sub">{tr.hero.sub}</p>
 
 			<div class="hero-ctas">
 				<a href={resolve('/projects')} class="btn btn--primary">
-					View my work
+					{tr.hero.ctaPrimary}
 					<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
 						<path
 							d="M3 8h10M9 4l4 4-4 4"
@@ -39,24 +39,19 @@
 						/>
 					</svg>
 				</a>
-				<a href={resolve('/contact')} class="btn btn--ghost">Let's talk</a>
+				<a href={resolve('/contact')} class="btn btn--ghost">{tr.hero.ctaSecondary}</a>
 			</div>
 
-			<ul class="hero-stats" aria-label="Quick facts">
-				<li>
-					<span class="stat-number">14+</span>
-					<span class="stat-label">Years in design</span>
-				</li>
-				<li class="stat-divider" aria-hidden="true"></li>
-				<li>
-					<span class="stat-number">3+</span>
-					<span class="stat-label">Years in dev</span>
-				</li>
-				<li class="stat-divider" aria-hidden="true"></li>
-				<li>
-					<span class="stat-number">20+</span>
-					<span class="stat-label">Projects shipped</span>
-				</li>
+			<ul class="hero-stats" aria-label={tr.hero.statsAriaLabel}>
+				{#each tr.hero.stats as stat, i (stat.number)}
+					{#if i > 0}
+						<li class="stat-divider" aria-hidden="true"></li>
+					{/if}
+					<li>
+						<span class="stat-number">{stat.number}</span>
+						<span class="stat-label">{stat.label}</span>
+					</li>
+				{/each}
 			</ul>
 		</div>
 
@@ -78,15 +73,16 @@
 				</div>
 
 				<!-- Floating badges -->
-				<div class="badge badge--tl">
-					<span class="badge-icon">✦</span> Front-end
-				</div>
-				<div class="badge badge--br">
-					<span class="badge-icon">✦</span> UX/UI Design
-				</div>
-				<div class="badge badge--tr">
-					<span class="badge-icon">✦</span> Full-stack
-				</div>
+				{#each tr.hero.badges as badge, i (badge)}
+					<div
+						class="badge"
+						class:badge--tl={i === 0}
+						class:badge--br={i === 1}
+						class:badge--tr={i === 2}
+					>
+						<span class="badge-icon">✦</span> {badge}
+					</div>
+				{/each}
 
 				<!-- Accent dots -->
 				<div class="dot dot--1"></div>
@@ -98,7 +94,7 @@
 
 	<!-- Scroll indicator -->
 	<div class="scroll-indicator" aria-hidden="true">
-		<span class="scroll-label">scroll</span>
+		<span class="scroll-label">{tr.hero.scroll}</span>
 		<div class="scroll-line"></div>
 	</div>
 </section>

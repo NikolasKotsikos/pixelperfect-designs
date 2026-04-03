@@ -1,14 +1,16 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import { t } from '$lib/i18n';
 
 	const pathname = $derived(page.url.pathname);
+	const tr = $derived(t());
 </script>
 
-<nav class="desktop-nav" aria-label="Main navigation">
-	<a href="/about" class:active={pathname === '/about'}>About</a>
-	<a href="/projects" class:active={pathname.startsWith('/projects')}>Projects</a>
-	<a href="/services" class:active={pathname === '/services'}>Services</a>
-	<a href="/contact" class="cta" class:active={pathname === '/contact'}> Let's talk </a>
+<nav class="desktop-nav" aria-label={tr.nav.ariaLabel}>
+	<a href="/about" class:active={pathname === '/about'}>{tr.nav.about}</a>
+	<a href="/projects" class:active={pathname.startsWith('/projects')}>{tr.nav.projects}</a>
+	<a href="/services" class:active={pathname === '/services'}>{tr.nav.services}</a>
+	<a href="/contact" class="cta" class:active={pathname === '/contact'}>{tr.nav.cta}</a>
 </nav>
 
 <style>

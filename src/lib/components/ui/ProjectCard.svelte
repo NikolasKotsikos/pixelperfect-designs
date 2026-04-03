@@ -1,8 +1,18 @@
 <script lang="ts">
 	import type { Project } from '$lib/data/projects';
+	import { t } from '$lib/i18n';
 
-	export let project: Project;
-	export let wide = false; // spans 2 cols in the featured grid
+	interface Props {
+		project: Project;
+		wide?: boolean;
+	}
+	let { project, wide = false }: Props = $props();
+
+	const tr = $derived(t());
+	const cardTr = $derived(tr.projectsData[project.id]);
+	const title = $derived(cardTr?.title ?? project.title);
+	const role = $derived(cardTr?.role ?? project.role);
+	const description = $derived(cardTr?.description ?? project.description);
 </script>
 
 <article
@@ -21,9 +31,9 @@
 				target="_blank"
 				rel="noopener noreferrer"
 				class="card-live"
-				aria-label="Visit {project.title} live site"
+				aria-label={tr.projectCard.liveSiteAriaLabel.replace('{title}', title)}
 			>
-				<span class="card-live__label">Live site</span>
+				<span class="card-live__label">{tr.projectCard.liveSiteLabel}</span>
 				<span class="card-live__url">{project.liveUrl.replace('https://', '')}</span>
 				<svg
 					class="card-live__arrow"
@@ -68,7 +78,7 @@
 							stroke-linecap="round"
 						/>
 					</svg>
-					Private work
+					{tr.projectCard.privateWork}
 				</div>
 			</div>
 		{/if}
@@ -81,11 +91,11 @@
 			<span class="card-period">{project.period}</span>
 		</div>
 
-		<h3 class="card-title">{project.title}</h3>
-		<p class="card-role">{project.role}</p>
-		<p class="card-description">{project.description}</p>
+		<h3 class="card-title">{title}</h3>
+		<p class="card-role">{role}</p>
+		<p class="card-description">{description}</p>
 
-		<ul class="card-tags" aria-label="Technologies used">
+		<ul class="card-tags" aria-label={tr.projectCard.techsAriaLabel}>
 			{#each project.tags as tag (tag)}
 				<li class="card-tag">{tag}</li>
 			{/each}
@@ -97,9 +107,9 @@
 				target="_blank"
 				rel="noopener noreferrer"
 				class="card-link"
-				aria-label="Visit {project.title} — opens in new tab"
+				aria-label={tr.projectCard.viewLiveAriaLabel.replace('{title}', title)}
 			>
-				View live site
+				{tr.projectCard.viewLive}
 				<svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
 					<path
 						d="M2.5 7h9M8 3.5l3.5 3.5L8 10.5"
