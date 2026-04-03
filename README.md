@@ -289,7 +289,7 @@ try {
     $mail->addAddress('info@pixelperfectdesigns.nl');   // <-- destination inbox
     $mail->addReplyTo($email, $name);
 
-    $mail->Subject = 'New contact form submission';
+    $mail->Subject = 'New contact form submission from'.{$name};
     $mail->Body    = "Name: {$name}\nEmail: {$email}\n\nMessage:\n{$message}\n";
 
     $mail->send();
